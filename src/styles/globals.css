@@ -1,0 +1,23 @@
+/* styles/globals.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .bg-gradient-blue {
+    background: linear-gradient(to right, #3b82f6, #1d4ed8);
+  }
+
+  .hover-scale {
+    transition: transform 0.2s;
+  }
+
+  .hover-scale:hover {
+    transform: scale(1.05);
+  }
+
+  .transition-all {
+    transition: all 0.3s ease-in-out;
+  }
+
+}
