@@ -19,5 +19,16 @@
   .transition-all {
     transition: all 0.3s ease-in-out;
   }
+  .swiper-pagination-bullet {
+    background-color: #ffffff;
+  }
+  
+  .swiper-button-next,
+  .swiper-button-prev {
+    color: #ffffff;
+  }
+  .swiper-pagination-bullet-active {
+    background-color: #1d4ed8;
+  }
 
 }

@@ -8,12 +8,18 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@headlessui/react": "^2.2.0",
     "@neondatabase/serverless": "^0.7.2",
-    "@types/tailwindcss": "^3.1.0",
+    "clsx": "^2.1.1",
+    "framer-motion": "^12.5.0",
+    "lodash.isequal": "^4.5.0",
+    "lucide-react": "^0.482.0",
     "next": "^15.2.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-spinners": "^0.15.0"
+    "react-spinners": "^0.15.0",
+    "swiper": "^11.2.5",
+    "zod": "^3.24.2"
   },
   "devDependencies": {
     "@types/node": "^18.19.80",

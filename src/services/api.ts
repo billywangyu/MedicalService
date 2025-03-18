@@ -1,4 +1,3 @@
-// services/api.ts
 import {
   MedicalService,
   City,
@@ -13,190 +12,143 @@ import {
 } from '../types/MedicalService';
 
 /**
- * Fetch medical services for a specific city
- * @param {string} cityId - The ID of the city
- * @returns {Promise<MedicalService[]>} - A promise that resolves to an array of MedicalService objects
+ * Generic function to fetch data from the API
+ * @param {string} type - The type of data to fetch
+ * @param {string} cityId - The ID of the city (optional)
+ * @returns {Promise<T[]>} - A promise that resolves to an array of data objects
  * @throws {Error} - Throws an error if the request fails
  */
-export const fetchMedicalServices = async (cityId: string): Promise<MedicalService[]> => {
+const fetchData = async <T>(type: string, cityId?: string): Promise<T[]> => {
+  const url = cityId ? `/api/data?type=${type}&cityId=${cityId}` : `/api/data?type=${type}`;
   try {
-    const response = await fetch(`/api/data?type=medical&cityId=${cityId}`);
+    const response = await fetch(url);
     if (!response.ok) {
-      throw new Error(`Failed to fetch medical services: ${response.statusText}`);
+      throw new Error(`Failed to fetch ${type}: ${response.statusText}`);
     }
     return await response.json();
   } catch (error) {
-    console.error('Error fetching medical services:', error);
+    console.error(`Error fetching ${type}:`, error);
     throw error;
   }
 };
 
 /**
- * Fetch all cities
- * @returns {Promise<City[]>} - A promise that resolves to an array of City objects
+ * Fetch data for a specific category and city
+ * @param {string} cityId - The ID of the city
+ * @param {string} category - The category to fetch data for
+ * @returns {Promise<any>} - A promise that resolves to the fetched data
  * @throws {Error} - Throws an error if the request fails
  */
-export const fetchCities = async (): Promise<City[]> => {
-  try {
-    const response = await fetch('/api/data?type=city');
-    if (!response.ok) {
-      throw new Error(`Failed to fetch cities: ${response.statusText}`);
-    }
-    return await response.json();
-  } catch (error) {
-    console.error('Error fetching cities:', error);
-    throw error;
+export const fetchCategoryData = async (cityId: string, category: string): Promise<any> => {
+  switch (category) {
+    case '医疗服务':
+      return fetchMedicalServices(cityId);
+    case '民族':
+      return fetchEthnicGroups(cityId);
+    case '景点':
+      return fetchAttractions(cityId);
+    case '美食':
+      return fetchFoods(cityId);
+    case '酒店':
+      return fetchHotels(cityId);
+    case '交通':
+      return fetchTransports(cityId);
+    case '特产':
+      return fetchLocalProducts(cityId);
+    case '节日活动':
+      return fetchFestivals(cityId);
+    case '天气':
+      return fetchLocalWeather(cityId);
+    default:
+      throw new Error(`Unknown category: ${category}`);
   }
+};
+
+/**
+ * Fetch medical services for a specific city
+ * @param {string} cityId - The ID of the city
+ * @returns {Promise<MedicalService[]>} - A promise that resolves to an array of MedicalService objects
+ */
+export const fetchMedicalServices = async (cityId: string): Promise<MedicalService[]> => {
+  return fetchData<MedicalService>('medical', cityId);
+};
+
+/**
+ * Fetch all cities
+ * @returns {Promise<City[]>} - A promise that resolves to an array of City objects
+ */
+export const fetchCities = async (): Promise<City[]> => {
+  return fetchData<City>('city');
 };
 
 /**
  * Fetch ethnic groups for a specific city
  * @param {string} cityId - The ID of the city
  * @returns {Promise<EthnicGroup[]>} - A promise that resolves to an array of EthnicGroup objects
- * @throws {Error} - Throws an error if the request fails
  */
 export const fetchEthnicGroups = async (cityId: string): Promise<EthnicGroup[]> => {
-  try {
-    const response = await fetch(`/api/data?type=ethnic_group&cityId=${cityId}`);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch ethnic groups: ${response.statusText}`);
-    }
-    return await response.json();
-  } catch (error) {
-    console.error('Error fetching ethnic groups:', error);
-    throw error;
-  }
+  return fetchData<EthnicGroup>('ethnic_group', cityId);
 };
 
 /**
  * Fetch attractions for a specific city
  * @param {string} cityId - The ID of the city
  * @returns {Promise<Attraction[]>} - A promise that resolves to an array of Attraction objects
- * @throws {Error} - Throws an error if the request fails
  */
 export const fetchAttractions = async (cityId: string): Promise<Attraction[]> => {
-  try {
-    const response = await fetch(`/api/data?type=attraction&cityId=${cityId}`);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch attractions: ${response.statusText}`);
-    }
-    return await response.json();
-  } catch (error) {
-    console.error('Error fetching attractions:', error);
-    throw error;
-  }
+  return fetchData<Attraction>('attraction', cityId);
 };
 
 /**
  * Fetch foods for a specific city
  * @param {string} cityId - The ID of the city
  * @returns {Promise<Food[]>} - A promise that resolves to an array of Food objects
- * @throws {Error} - Throws an error if the request fails
  */
 export const fetchFoods = async (cityId: string): Promise<Food[]> => {
-  try {
-    const response = await fetch(`/api/data?type=food&cityId=${cityId}`);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch foods: ${response.statusText}`);
-    }
-    return await response.json();
-  } catch (error) {
-    console.error('Error fetching foods:', error);
-    throw error;
-  }
+  return fetchData<Food>('food', cityId);
 };
 
 /**
  * Fetch hotels for a specific city
  * @param {string} cityId - The ID of the city
  * @returns {Promise<Hotel[]>} - A promise that resolves to an array of Hotel objects
- * @throws {Error} - Throws an error if the request fails
  */
 export const fetchHotels = async (cityId: string): Promise<Hotel[]> => {
-  try {
-    const response = await fetch(`/api/data?type=hotel&cityId=${cityId}`);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch hotels: ${response.statusText}`);
-    }
-    return await response.json();
-  } catch (error) {
-    console.error('Error fetching hotels:', error);
-    throw error;
-  }
+  return fetchData<Hotel>('hotel', cityId);
 };
 
 /**
  * Fetch transport options for a specific city
  * @param {string} cityId - The ID of the city
  * @returns {Promise<Transport[]>} - A promise that resolves to an array of Transport objects
- * @throws {Error} - Throws an error if the request fails
  */
 export const fetchTransports = async (cityId: string): Promise<Transport[]> => {
-  try {
-    const response = await fetch(`/api/data?type=transport&cityId=${cityId}`);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch transports: ${response.statusText}`);
-    }
-    return await response.json();
-  } catch (error) {
-    console.error('Error fetching transports:', error);
-    throw error;
-  }
+  return fetchData<Transport>('transport', cityId);
 };
 
 /**
  * Fetch local products for a specific city
  * @param {string} cityId - The ID of the city
  * @returns {Promise<LocalProduct[]>} - A promise that resolves to an array of LocalProduct objects
- * @throws {Error} - Throws an error if the request fails
  */
 export const fetchLocalProducts = async (cityId: string): Promise<LocalProduct[]> => {
-  try {
-    const response = await fetch(`/api/data?type=local_product&cityId=${cityId}`);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch local products: ${response.statusText}`);
-    }
-    return await response.json();
-  } catch (error) {
-    console.error('Error fetching local products:', error);
-    throw error;
-  }
+  return fetchData<LocalProduct>('local_product', cityId);
 };
 
 /**
  * Fetch festivals for a specific city
  * @param {string} cityId - The ID of the city
  * @returns {Promise<Festival[]>} - A promise that resolves to an array of Festival objects
- * @throws {Error} - Throws an error if the request fails
  */
 export const fetchFestivals = async (cityId: string): Promise<Festival[]> => {
-  try {
-    const response = await fetch(`/api/data?type=festival&cityId=${cityId}`);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch festivals: ${response.statusText}`);
-    }
-    return await response.json();
-  } catch (error) {
-    console.error('Error fetching festivals:', error);
-    throw error;
-  }
+  return fetchData<Festival>('festival', cityId);
 };
 
 /**
  * Fetch local weather for a specific city
  * @param {string} cityId - The ID of the city
  * @returns {Promise<LocalWeather[]>} - A promise that resolves to an array of LocalWeather objects
- * @throws {Error} - Throws an error if the request fails
  */
 export const fetchLocalWeather = async (cityId: string): Promise<LocalWeather[]> => {
-  try {
-    const response = await fetch(`/api/data?type=local_weather&cityId=${cityId}`);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch local weather: ${response.statusText}`);
-    }
-    return await response.json();
-  } catch (error) {
-    console.error('Error fetching local weather:', error);
-    throw error;
-  }
+  return fetchData<LocalWeather>('local_weather', cityId);
 };
